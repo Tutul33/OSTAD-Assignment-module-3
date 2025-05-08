@@ -25,13 +25,7 @@ pipeline {
                 sh 'npm run check || exit 1'
             }
         }
-
-        stage('Report') {
-           steps {
-             echo 'Publishing test results...'
-             junit 'test-results/results.xml'
-           }
-       }
+        
     }
 
     
