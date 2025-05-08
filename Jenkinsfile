@@ -14,8 +14,7 @@ pipeline {
         stage('Read hello.txt') {
             steps {
                 script {
-                    //def content = readFile 'hello.txt'
-                    //echo "Contents of hello.txt:\n${content}"
+                    echo "Contents of Hello"
                 }
             }
         }
