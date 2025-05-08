@@ -4,7 +4,7 @@
 
   "scripts": {
     "start": "node src/server.js",
-    "check": "mocha test/**/*.test.js",
+    "check": "jest --ci --reporters=default --reporters=jest-junit",
     "dev": "node src/server.js"
   },
   "dependencies": {
