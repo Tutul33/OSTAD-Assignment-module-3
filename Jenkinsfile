@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     stages {
-        stage('Checkout Code') {
+        stage('Clone') {
             steps {
                 // Checkout source code
                 git branch: 'main', 
@@ -11,11 +11,18 @@ pipeline {
             }
         }
 
-        stage('Read hello.txt') {
+        stage('Install') {
             steps {
-                script {
-                    echo "Contents of Hello"
-                }
+                echo '📦 Installing dependencies...'
+                sh 'npm install'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                echo '🧪 Running tests...'
+                // Update the script if the test tool supports JUnit XML reporting
+                sh 'npm run check || exit 1'
             }
         }
     }
