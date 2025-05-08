@@ -21,9 +21,12 @@ pipeline {
         stage('Test') {
             steps {
                 echo 'Running tests...'
-                // Update the script if the test tool supports JUnit XML reporting
-                //sh 'npm run check || exit 1'
-                sh 'npx jest --ci --reporters=default --reporters=jest-junit || exit 1'
+                sh 'npx jest --ci --reporters=default --reporters=jest-junit'
+            }
+            post {
+                always {
+                    junit 'reports/junit/js-test-results.xml'
+                }
             }
         }
 
