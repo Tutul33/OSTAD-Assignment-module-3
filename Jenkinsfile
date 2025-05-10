@@ -3,6 +3,7 @@ pipeline {
 
     environment {
         NODE_HOME = tool name: 'nodejs', type: 'NodeJS'
+        PATH = "${NODE_HOME}/bin:${env.PATH}"
     }
 
     stages {
@@ -14,17 +15,14 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                script {
-                    sh 'npm install'
-                }
+                echo 'Installing dependencies...'
+                sh 'npm install'
             }
         }
 
         stage('Run Tests') {
             steps {
-                script {
-                    sh 'npm test -- --reporter junit'
-                }
+                sh 'mkdir -p test-results && npm test -- --reporter-options mochaFile=./test-results/results.xml'
             }
         }
 
