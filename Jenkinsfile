@@ -32,13 +32,7 @@
 // }
 
 pipeline {
-    agent {
-        docker {
-            image 'node:18'
-            args '-u root' // Optional if you need root for permissions
-        }
-    }
-
+    
     stages {
         stage('Clone') {
             steps {
