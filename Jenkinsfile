@@ -2,12 +2,11 @@ pipeline {
     agent any
 
     environment {
-        NODE_HOME = tool name: 'NodeJS 18', type: 'NodeJSInstallation'
-        PATH = "${NODE_HOME}/bin:${env.PATH}"
+        NODE_HOME = tool name: 'nodejs', type: 'NodeJS'
     }
 
     stages {
-        stage('Clone Repo') {
+        stage('Checkout') {
             steps {
                 git credentialsId: 'github-ssh-key', url: 'git@github.com:Tutul33/OSTAD-Assignment-module-3.git', branch: 'main'
             }
@@ -15,32 +14,39 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                // Make sure you're installing dependencies here
-                sh 'npm install'  // This will install jest, jest-junit, and any other dependencies
+                script {
+                    sh 'npm install'
+                }
             }
         }
 
         stage('Run Tests') {
             steps {
-                // Running the tests, with results outputting to JUnit-compatible format
-                sh 'npm test'
-            }
-            post {
-                always {
-                    junit '**/test-reports/junit.xml'  // Path to the JUnit report
+                script {
+                    sh 'npm test -- --reporter junit'
                 }
             }
         }
-    }
 
-    post {
-        success {
-            //discordSend description: "✅ Build Success", webhookURL: "${DISCORD_WEBHOOK}"
-            echo 'Build Success';
+        stage('Publish Test Results') {
+            steps {
+                junit '**/test-results/*.xml'
+            }
         }
-        failure {
-            //discordSend description: "❌ Build Failed", webhookURL: "${DISCORD_WEBHOOK}"
-            echo 'Build failed';
+
+        stage('Notify Discord') {
+            steps {
+                script {
+                    def discordWebhookUrl = 'https://discord.com/api/webhooks/1370351297957597215/IvDHPwvUF9CSEwx3jbtMBhMiLvfKed--1CLP31y8XDYXQP2MHAvoVdliFjijw_3EU2i6'
+                    def message = "Build Status: ${currentBuild.currentResult}"
+
+                    sh """
+                        curl -X POST -H "Content-Type: application/json" \
+                        -d '{"content": "${message}"}' \
+                        ${discordWebhookUrl}
+                    """
+                }
+            }
         }
     }
 }
