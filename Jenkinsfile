@@ -1,32 +1,46 @@
 pipeline {
     agent any
 
-    stages {
-        stage('Clone') {
-            steps {
-                // Checkout source code
-                git branch: 'main', 
-                credentialsId: 'github-ssh-key',
-                url: 'git@github.com:Tutul33/OSTAD-Assignment-module-3.git'
-            }
-        }
-
-        stage('Install') {
-            steps {
-                echo 'Installing dependencies...'
-                sh 'npm install'
-            }
-        }
-
-        stage('Test') {
-            steps {
-                echo 'Running tests...'
-                // Update the script if the test tool supports JUnit XML reporting
-                sh 'npm run check || exit 1'
-            }
-        }
-        
+    environment {
+        NODE_HOME = tool name: 'NodeJS 18', type: 'NodeJSInstallation'
+        PATH = "${NODE_HOME}/bin:${env.PATH}"
     }
 
-    
+    stages {
+        stage('Clone Repo') {
+            steps {
+                git credentialsId: 'github-ssh-key', url: 'git@github.com:Tutul33/OSTAD-Assignment-module-3.git', branch: 'main'
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                // Make sure you're installing dependencies here
+                sh 'npm install'  // This will install jest, jest-junit, and any other dependencies
+            }
+        }
+
+        stage('Run Tests') {
+            steps {
+                // Running the tests, with results outputting to JUnit-compatible format
+                sh 'npm test'
+            }
+            post {
+                always {
+                    junit '**/test-reports/junit.xml'  // Path to the JUnit report
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            //discordSend description: "✅ Build Success", webhookURL: "${DISCORD_WEBHOOK}"
+            echo 'Build Success';
+        }
+        failure {
+            //discordSend description: "❌ Build Failed", webhookURL: "${DISCORD_WEBHOOK}"
+            echo 'Build failed';
+        }
+    }
 }
