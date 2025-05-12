@@ -32,7 +32,7 @@ pipeline {
             steps {
                 script {
                     def discordWebhookUrl = 'https://discord.com/api/webhooks/1370351297957597215/IvDHPwvUF9CSEwx3jbtMBhMiLvfKed--1CLP31y8XDYXQP2MHAvoVdliFjijw_3EU2i6'
-                    def message = "Build Status: ${currentBuild.currentResult}"
+                    def message = "Build Status: ${currentBuild.currentResult} from Jenkin Server Build."
 
                     sh """
                         curl -X POST -H "Content-Type: application/json" \
