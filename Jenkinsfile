@@ -13,24 +13,24 @@ pipeline {
             }
         }
 
-        // stage('Install Dependencies') {
-        //     steps {
-        //         echo 'Installing dependencies...'
-        //         sh 'npm install'
-        //     }
-        // }
+        stage('Install Dependencies') {
+            steps {
+                echo 'Installing dependencies...'
+                sh 'npm install'
+            }
+        }
 
-        // stage('Run Tests') {
-        //     steps {
-        //         sh 'mkdir -p test-results && npm test -- --reporter-options mochaFile=./test-results/results.xml'
-        //     }
-        // }
+        stage('Run Tests') {
+            steps {
+                sh 'mkdir -p test-results && npm test -- --reporter-options mochaFile=./test-results/results.xml'
+            }
+        }
 
-        // stage('Publish Test Results') {
-        //     steps {
-        //         junit '**/test-results/*.xml'
-        //     }
-        // }
+        stage('Publish Test Results') {
+            steps {
+                junit '**/test-results/*.xml'
+            }
+        }
 
         stage('Notify Discord') {
             steps {
