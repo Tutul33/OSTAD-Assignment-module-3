@@ -1,12 +1,8 @@
 pipeline {
     agent any
 
-   tools {
-        nodejs 'nodejs' // Make sure this is defined in Jenkins Global Tools
-    }
-
     stages {
-        
+
         stage('Checkout') {
             steps {
                 git credentialsId: 'github-ssh-key', url: 'git@github.com:Tutul33/OSTAD-Assignment-module-3.git', branch: 'main'
