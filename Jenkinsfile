@@ -1,9 +1,8 @@
 pipeline {
     agent any
 
-    environment {
-        NODE_HOME = tool name: 'nodejs', type: 'NodeJS'
-        PATH = "${NODE_HOME}/bin:${env.PATH}"
+   tools {
+        nodejs 'NodeJS 18' // Make sure this is defined in Jenkins Global Tools
     }
 
     stages {
